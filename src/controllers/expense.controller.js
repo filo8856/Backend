@@ -2,15 +2,17 @@ const Expense = require("../models/Expense");
 const mongoose = require('mongoose');
 
 exports.getExpenses = (req, res) => {
-    Expense.find({ userId: req.user._id })
+    Expense.find({ userId: req.body.userId })
         .sort({ date: -1 })
-        .select("amount description category date")
+        .select("amount description category date _id")
         .exec()
         .then((result) => {
+            //console.log(result);
             const response = {
                 count: result.length,
                 expenses: result.map((expense) => {
                     return {
+                        _id:expense._id,
                         amount: expense.amount,
                         description: expense.description,
                         category: expense.category,
@@ -29,7 +31,7 @@ exports.getExpenses = (req, res) => {
 }
 exports.createExpense = (req, res) => {
     const expense = new Expense({
-        userId: req.user._id,
+        userId: req.body.userId,
         amount: req.body.amount,
         description: req.body.description,
         date: req.body.date,
@@ -64,7 +66,7 @@ exports.updateExpense = (req, res) => {
     const updateOps = req.body;
 
     Expense.updateOne(
-        { _id: id, userId: req.user._id },
+        { _id: id, userId: req.body.userId },
         { $set: updateOps }
     )
     .exec()
@@ -87,7 +89,7 @@ exports.deleteExpense = (req, res) => {
 
   Expense.deleteOne({
     _id: id,
-    userId: req.user._id
+    userId: req.body.userId
   })
     .exec()
     .then((result) => {
@@ -96,7 +98,7 @@ exports.deleteExpense = (req, res) => {
           message: "Expense not found"
         });
       }
-
+      console.log('deleted')
       res.status(200).json({
         message: "Expense deleted"
       });

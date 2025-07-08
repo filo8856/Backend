@@ -36,6 +36,7 @@ const loginController = async (req, res) => {
         // WHY: Prevents revealing if a specific userId exists in the database
         // WHY: Provides generic "not found" error rather than authentication failure
         if(!existingUser){
+            console.log("User not found")
             return res.status(404).json({
                 status: 404,
                 message: "User not found",
@@ -53,6 +54,7 @@ const loginController = async (req, res) => {
         // WHY: Returns 403 Forbidden for security reasons
         // WHY: Uses generic "Invalid credentials" to avoid revealing which credential was wrong
         if(!isPasswordValid){
+            console.log("Wrong pass")
             return res.status(403).json({
                 status: 403,
                 message: "Unauthorized",
@@ -76,6 +78,7 @@ const loginController = async (req, res) => {
         // Successful authentication response with JWT token
         // WHY: Returns the token for client to store and use in subsequent requests
         // WHY: Returns minimal user data to avoid exposing sensitive information
+        console.log("succ")
         return res.status(200).json({
             status: 200,
             message: "Login successful",
