@@ -16,6 +16,9 @@ const HealthCheckRoute = require('express').Router();
 
 // GET endpoint for system status verification
 HealthCheckRoute.get('/healthCheck', healthCheckController);
+HealthCheckRoute.head('/healthCheck', (req, res) => {
+    return res.sendStatus(200);
+});
 
 // Export routes for mounting in main app
 module.exports = { HealthCheckRoute };
